@@ -2,6 +2,7 @@
 #include "util.h"
 
 #include <stb/stb_image.h>
+#include <stb/stb_image_write.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -19,7 +20,7 @@ Image load_img(const char *filename, int desired_channels)
 
     if (img.pixels == NULL)
     {
-        die("Error: cannot load image '%s': %s\n", filename,
+        die("cannot load image '%s': %s", filename,
                 stbi_failure_reason());
     }
 
@@ -29,6 +30,21 @@ Image load_img(const char *filename, int desired_channels)
            img.height, img.channels, channels_in_file);
 
     return img;
+}
+
+void save_grayscale_img(const char *filename, const Image *img)
+{
+    int res = stbi_write_png(filename, 
+                             img->width, 
+                             img->height, 
+                             1,
+                             img->pixels,
+                             img->width);
+
+    if (res == 0)
+    {
+        die("cannot write image '%s'", filename);
+    }
 }
 
 void free_img(Image *img)
