@@ -3,7 +3,7 @@
 
 #include <stddef.h>
 
-[[noreturn]] void die(const char *message);
+[[noreturn]] void die(const char *format, ...);
 
 void *xmalloc(size_t size, size_t elem_count);
 void *xcalloc(size_t size, size_t elem_count);

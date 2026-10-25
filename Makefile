@@ -27,7 +27,8 @@ WARN     := -Wall -Wextra -Wpedantic -Wshadow -Wstrict-prototypes -Wvla
 CFLAGS   += -std=$(STD) $(OPT) -g $(WARN) -I$(INCDIR)
 CPPFLAGS += -MMD -MP
 LDFLAGS  +=
-LDLIBS   +=
+# libstb provides the compiled stb_image implementation (Debian: libstb-dev)
+LDLIBS   += -lstb -lm
 
 # ---- sources ---------------------------------------------------------------
 SRCS := $(wildcard $(SRCDIR)/*.c)

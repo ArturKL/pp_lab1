@@ -1,5 +1,6 @@
 #include "util.h"
 
+#include <stdarg.h>
 #include <stdckdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,9 +30,16 @@ void *xcalloc(size_t size, size_t elem_count)
     return memory;
 }
 
-void die(const char *message)
+void die(const char *format, ...)
 {
-    fprintf(stderr, "Error: %s\n", message);
+    va_list args;
+    va_start(args, format);
+
+    fprintf(stderr, "Error: ");
+    vfprintf(stderr, format, args);
+    fprintf(stderr, "\n");
+
+    va_end(args);
     exit(EXIT_FAILURE);
 }
 
