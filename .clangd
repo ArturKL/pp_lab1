@@ -1,0 +1,38 @@
+# clangd configuration for pp_lab1
+#
+# The sources are C23 (<stdckdint.h>, nullptr, [[noreturn]]), which the
+# Makefile enforces with -std=c23; clangd gets the same flags here so
+# diagnostics and completion work without a compile_commands.json.
+#
+# Both include spellings are needed: clangd's fallback mode runs with the
+# source file's own directory as the working directory, so files in src/
+# resolve -I../include and files elsewhere resolve -Iinclude.
+#
+# If you generate compile_commands.json (`bear -- make`), clangd prefers it
+# and uses the exact per-file flags instead of this fragment.
+CompileFlags:
+  Add:
+    - -std=c23
+    - -I../include
+    - -Iinclude
+    - -Wall
+    - -Wextra
+  Compiler: gcc
+
+Diagnostics:
+  UnusedIncludes: Strict
+  MissingIncludes: Strict
+
+# Headers have no compilation database entry of their own, so clangd falls
+# back to `-x objective-c++-header`, where -std=c23 is rejected with
+# "invalid argument '-std=c23' not allowed with 'Objective-C++'".
+# Force the C language for .h files in a separate fragment (the `---`
+# separator is required: fragments are separate YAML documents, and a second
+# CompileFlags key in the same document would replace the one above).
+---
+If:
+  PathMatch: .*\.h$
+CompileFlags:
+  Add:
+    - -x
+    - c

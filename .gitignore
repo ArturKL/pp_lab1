@@ -1,0 +1,4 @@
+build/
+pp_lab1
+*.o
+*.d
