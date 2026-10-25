@@ -1,4 +1,5 @@
 #include "image.h"
+#include "kernel.h"
 #include "util.h"
 
 #include <stdio.h>
@@ -15,5 +16,14 @@ int main(int argc, char *argv[])
 
 	save_grayscale_img("data/cat_greyscale.png", &img);
     free_img(&img);
+
+	float kernel[9];
+	load_kernel("data/kernel.txt", kernel);
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+			printf("%.2f ", kernel[idx(i, j, 3)]);
+		printf("\n");
+	}
     return 0;
 }
