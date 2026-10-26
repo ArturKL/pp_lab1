@@ -1,6 +1,7 @@
 #include "image.h"
 #include "util.h"
 
+#include <math.h>
 #include <stb/stb_image.h>
 #include <stb/stb_image_write.h>
 #include <stdio.h>
@@ -32,18 +33,39 @@ Image load_img(const char *filename, int desired_channels)
     return img;
 }
 
-void save_grayscale_img(const char *filename, const Image *img)
+void save_img(const char *filename, const Image *img)
 {
     int res = stbi_write_png(filename, 
                              img->width, 
                              img->height, 
-                             1,
+                             img->channels,
                              img->pixels,
                              img->width);
 
     if (res == 0)
     {
         die("cannot write image '%s'", filename);
+    }
+}
+
+void img_to_float(const Image *img, float *dst)
+{
+    size_t pixel_count = (size_t)img->width * (size_t)img->height;
+    for (size_t i = 0; i < pixel_count; i++)
+    {
+        dst[i] = (float)img->pixels[i];
+    }
+}
+
+void float_to_img(const float *src, Image *img)
+{
+    size_t pixel_count = (size_t)img->width * (size_t)img->height;
+    for (size_t i = 0; i < pixel_count; i++)
+    {
+        float value = src[i];
+        if (value < 0.0f) value = 0.0f;
+        if (value > 255.0f) value = 255.0f;
+        img->pixels[i] = (unsigned char) roundf(value);
     }
 }
 
